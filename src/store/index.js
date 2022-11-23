@@ -5,18 +5,41 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    table_1: {},
+    table_1: '',
     table_2: '',
+    fileName_1: '',
+    fileName_2: '',
   },
   getters: {
     FIRST_TABLE(state) { //геттер 
       return state.table_1;
-    }
-
+    },
+    SECOND_TABLE(state) {
+      return state.table_2
+    },
+    FIRST_FILE(state) {
+      return state.fileName_1
+    },
+    SECOND_FILE(state) {
+      return state.fileName_2
+    },
   },
+
   mutations: {
-    SET_TABLE_TO_STATE: (state, payload) => { //мутация id
+    SET_1_TABLE_TO_STATE: (state, payload) => { 
       state.table_1 = payload;
+    },
+
+    SET_2_TABLE_TO_STATE: (state, payload) => { 
+      state.table_2 = payload;
+    },
+
+    SET_1_FILE_NAME: (state, payload) => { 
+      state.fileName_1 = payload;
+    },
+
+    SET_2_FILE_NAME: (state, payload) => { 
+      state.fileName_2 = payload;
     }
 
   },

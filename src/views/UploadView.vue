@@ -1,17 +1,47 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="top">
+      <h2>Загрузка файлов</h2>
+        <div class="uploads">
+        <fileUpload fileNum = 1 value/>
+        <fileUpload fileNum = 2  />
+      </div>
+    </div>
+    <div class="button" v-if="this.$store.getters.FIRST_TABLE !== '' && this.$store.getters.SECOND_TABLE">
+      <nextButton />
+    </div>
+    
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import fileUpload from '@/components/fileUpload.vue'
+import nextButton from '@/components/nextButton.vue'
 
 export default {
   name: 'UploadView',
   components: {
-    HelloWorld
-  }
+    fileUpload,
+    nextButton
+  },
 }
 </script>
+
+<style>
+  .home {
+    margin-top: 19px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  h2 {
+    font-size: 51px;
+  }
+  .uploads {
+    display: flex;
+    justify-content: center;
+  }
+ 
+</style>
