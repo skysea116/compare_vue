@@ -3,7 +3,7 @@
     <div class="top">
       <h2>Загрузка файлов</h2>
         <div class="uploads">
-        <fileUpload fileNum = 1 value/>
+        <fileUpload fileNum = 1 />
         <fileUpload fileNum = 2  />
       </div>
     </div>
@@ -36,10 +36,18 @@ export default {
     flex-direction: column;
     justify-content: space-between;
   }
+  .top {
+    display: flex;
+    flex-direction: column;
+  }
   h2 {
     font-size: 51px;
   }
   .uploads {
+    display: flex;
+    justify-content: center;
+  }
+  .button {
     display: flex;
     justify-content: center;
   }

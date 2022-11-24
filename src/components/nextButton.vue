@@ -17,6 +17,7 @@ a {
     text-decoration: none;
     color: black;
     transition: all 0.2s;
+    width: 30vw;
   }
 a:hover {
     transition: all 0.2s;
