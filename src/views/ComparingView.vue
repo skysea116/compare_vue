@@ -1,6 +1,6 @@
 <template>
   <div class="comp">
-    <h2>Выберите столбцы для сравнения</h2>
+    <h2>Выберите параметры для сравнения</h2>
     <div class="top-comp">
       <div class="one">
         <h3>{{ this.$store.getters.FIRST_FILE }}</h3>
@@ -11,8 +11,10 @@
         <comparingFiles fileNum = 2 />
       </div>
     </div>
-    <div class="button">
-      <nextButton />
+    <div class="but-wrap">
+      <div class="button" v-if="((this.$store.getters.SELECTED_PARAMS_1.length) >= 1 && (this.$store.getters.SELECTED_PARAMS_2.length >= 1)) && (this.$store.getters.SELECTED_PARAMS_1.length == this.$store.getters.SELECTED_PARAMS_2.length)">
+        <nextButton />
+      </div>
     </div>
   </div>
 </template>
@@ -48,6 +50,10 @@ export default {
   .top-comp {
     display: flex;
     justify-content: space-between;
+  }
+  .but-wrap {
+    height: 11vh;
+    margin-bottom: 30px;
   }
   
 </style>

@@ -15,7 +15,7 @@
   </div>
 </template>
 <script>
-import { read } from 'xlsx';
+import { read, utils } from 'xlsx';
 
   export default {
     props: ['fileNum'],
@@ -48,12 +48,11 @@ import { read } from 'xlsx';
           var ws = wb.Sheets[wsname];
         
           /* generate HTML */
-          //var HTML = utils.sheet_to_html(ws);
-          console.log(ws)
+          var rows = utils.sheet_to_json(ws);
 
           /* update table */
           //document.getElementById('out-table').innerHTML = HTML;
-          this.setToVuex(ws)
+          this.setToVuex(rows)
         };
         reader.readAsArrayBuffer(this.file);
     },

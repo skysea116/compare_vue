@@ -18,7 +18,7 @@
   background-color: rgb(84, 201, 133);
     box-shadow: 40px 35px 1px rgba(70, 194, 101, 0.329);
     width: 70vw;
-    height: 75vh;
+    height: 80vh;
     margin: 0 auto;
     margin-top: 50px;
 }

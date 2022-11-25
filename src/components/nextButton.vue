@@ -1,5 +1,7 @@
 <template>
+  <div class="but">
      <router-link to="/comparing">Дальше</router-link>
+  </div>
 </template>
 <style>
 a {
@@ -18,11 +20,11 @@ a {
     color: black;
     transition: all 0.2s;
     width: 30vw;
-  }
+}
 a:hover {
     transition: all 0.2s;
     background-color: rgb(224, 224, 224);
     color: rgb(70, 194, 121);
-  }
+}
 </style>
 
