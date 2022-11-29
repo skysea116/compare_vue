@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="button" v-if="this.$store.getters.FIRST_TABLE !== '' && this.$store.getters.SECOND_TABLE">
-      <nextButton />
+      <nextButton ButtonNum = 1 />
     </div>
     
   </div>

@@ -13,7 +13,7 @@
     </div>
     <div class="but-wrap">
       <div class="button" v-if="((this.$store.getters.SELECTED_PARAMS_1.length) >= 1 && (this.$store.getters.SELECTED_PARAMS_2.length >= 1)) && (this.$store.getters.SELECTED_PARAMS_1.length == this.$store.getters.SELECTED_PARAMS_2.length)">
-        <nextButton />
+        <nextButton ButtonNum = 2 />
       </div>
     </div>
   </div>

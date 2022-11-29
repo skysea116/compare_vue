@@ -11,8 +11,6 @@ export default new Vuex.Store({
     fileName_2: '',
     selected_1: '',
     selected_2: '',
-    isSelected_1: '',
-    isSelected_2: ''
   },
   getters: {
     FIRST_TABLE(state) { //геттер 
@@ -36,15 +34,6 @@ export default new Vuex.Store({
     SELECTED_PARAMS_2(state) {
       return state.selected_2
     },
-
-
-    IS_SLECTED_1(state) {
-      return state.isSelected_1
-    },
-    IS_SLECTED_2(state) {
-      return state.isSelected_2
-    },
-
 
   },
 
@@ -70,12 +59,6 @@ export default new Vuex.Store({
     },
     SET_2_SELECTED_PARAMS: (state, payload) => { 
       state.selected_2 = payload;
-    },
-    IS_SELECTED_1: (state, payload) => { 
-      state.isSelected_1 = payload;
-    },
-    IS_SELECTED_2: (state, payload) => { 
-      state.isSelected_2 = payload;
     },
 
   },

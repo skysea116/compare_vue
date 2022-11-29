@@ -59,6 +59,7 @@ mounted() {
             this.headers.push(item)
         }
       }
+      this.headers.sort();
     },
     getSelectValue() {
       if(this.fileNum === '1') {

@@ -1,8 +1,20 @@
 <template>
   <div class="but">
-     <router-link to="/comparing">Дальше</router-link>
+      <span v-if="ButtonNum === '1'">
+        <router-link to="/comparing">Дальше</router-link>
+      </span>
+      <span v-if="ButtonNum === '2'">
+        <router-link to="/result">Дальше</router-link>
+      </span>
   </div>
 </template>
+
+<script>
+export default {
+  props: ['ButtonNum'],
+}
+</script>
+
 <style>
 a {
     padding:  25px;
