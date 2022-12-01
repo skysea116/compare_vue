@@ -16,3 +16,12 @@ export default {
 
 }
 </script>
+
+
+<style>
+  .result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>

@@ -1,13 +1,26 @@
 <template>
      <div class="res-blck">
-          <span v-for="item in completelyNonMatch_1" :key="item">
-            <span v-for="(item2, index) in item" :key="item2">
-              <span>{{ index }}: </span>{{item2}}
-            </span>
-            полностью отсутсвует в  <b>{{ secondFile }}</b><br>
-          </span><br>
-          <span v-for="item in nonMatched_2" :key="item">
-            {{item}}
+      <span>{{equalMsg}}</span>
+          <span v-for="(item) in completelyNonMatch_1" :key="item" class="row">
+            <span><b>Строка {{ item.index }}</b> файла "{{ firstFile }}", содержащая </span>
+              <span v-for="(item2, index2) in item" :key="item2">
+                
+                <span v-if="index2 !== 'index'"> {{ index2 }}: <b>{{item2}}</b> </span>
+              </span>
+              полностью отсутсвуют в  <b>{{ secondFile }}</b><br>
+            
+          </span>
+
+
+          <span v-for="(item) in completelyNonMatch_2" :key="item" class="row">
+            <span><b>Строка {{ item.index }}</b> файла "{{ secondFile}}", содержащая </span>
+              <span v-for="(item2, index2) in item" :key="item2">
+                
+                <span v-if="index2 !== 'index'"> {{ index2 }}: <b>{{item2}}</b> </span>
+                
+              </span>
+              полностью отсутсвуют в  <b>{{ firstFile }}</b><br>
+            
           </span>
      </div>
 </template>
@@ -29,12 +42,15 @@ export default {
      completelyNonMatch_1: '',
      partialMatch_2: '',
      completelyNonMatch_2: '',
+
+     equalMsg: '',
     }
   },
 
   mounted() {
      this.toGetSelectedData() 
      this.toCompareIt()
+     this.resultOutput()
   },
 
   methods: {
@@ -76,6 +92,8 @@ export default {
 
      toCompareIt() {
       let table_1 = this.firstTable
+      
+
 
       console.log('table11111', this.firstTable)
        
@@ -87,10 +105,12 @@ export default {
       let matched_2 = []
       let nonMatched_2 = []
 
-
-    
-
-
+      if(nonMatched_1 === [] && nonMatched_2 === []) {
+        this.equalMsg = 'Загруженные файлы полностью совпадают!'
+        console.log('aaa', this.equalMsg)
+       } else {
+        this.equalMsg = ''
+       }
         //поиск всех разных строк из первой таблицы
         table_1.forEach((row, index) => {
 
@@ -101,7 +121,6 @@ export default {
             }, 
           {}
         );
-            console.log('tttt', table_1)
 
           table_2.forEach((row2) => {
             if(lodash.isEqual(row, row2)) {
@@ -132,7 +151,6 @@ export default {
             }, 
           {}
         );
-        console.log('t2', table_2)
 
           table_1.forEach((row) => {
             if(lodash.isEqual(row2, row)) {
@@ -156,25 +174,22 @@ export default {
        let completelyNonMatch_1 = [];
 
 
-        //полностью не совпадающие строки в первой таблице
+        //не совпадающие строки в первой таблице
         nonMatched_1.forEach(nonRow => {
           for(let item in nonRow) {
-
             nonMatched_2.forEach(nonRow2 => {
              
-              for(let item2 in nonRow2) {
+              for(let item2 in nonRow2) { //поиск частично совпадающих объектов
 
                 if(lodash.isEqual( nonRow[item], nonRow2[item2])) {
-                  console.log('1', nonRow[item], '2', nonRow2[item2])
 
                   partialMatch_1.push(nonMatched_1.find(non => non[item] === nonRow[item]))
-
+                  console.log('aboba',  partialMatch_1)
                   partialMatch_1 = partialMatch_1.filter((item3, index3) => {
                     return partialMatch_1.indexOf(item3) === index3
                   });
 
                   this.partialMatch_1 = partialMatch_1;
-                  console.log('part', this.partialMatch_1)
 
                 } else { //поиск полностью не свопадающих объектов
       
@@ -190,21 +205,19 @@ export default {
           }
           
         }) 
-        console.log('comlete', this.completelyNonMatch_1)
+        console.log('comlete', this.completelyNonMatch_1, 'part', this.partialMatch_1)
 
-        /*let partialMatch_2 = [];
+        let partialMatch_2 = [];
        let completelyNonMatch_2 = [];
 
-        //полностью не совпадающие строки в первой таблице
-        nonMatched_2.forEach(nonRow => {
-          for(let item in nonRow) {
-
-            nonMatched_2.forEach(nonRow2 => {
+        //не совпадающие строки во второй таблице
+        nonMatched_2.forEach(nonRow2 => {
+          for(let item2 in nonRow2) {
+            nonMatched_1.forEach(nonRow => {
              
-              for(let item2 in nonRow2) {
+              for(let item in nonRow) {
 
                 if(lodash.isEqual( nonRow[item], nonRow2[item2])) {
-                  console.log('1', nonRow[item], '2', nonRow2[item2])
 
                   partialMatch_2.push(nonMatched_2.find(non => non[item] === nonRow[item]))
 
@@ -213,17 +226,14 @@ export default {
                   });
 
                   this.partialMatch_2 = partialMatch_2;
-                  console.log('part2', this.partialMatch_2)
+                  console.log('part', this.partialMatch_2)
 
-                } else {
-                  completelyNonMatch_2.push(nonMatched_2.find(non => non[item] !== nonRow[item]))
+                } else { //поиск полностью не свопадающих объектов
+      
+                  completelyNonMatch_2 = lodash.xor(partialMatch_2, nonMatched_2) 
+                  this.completelyNonMatch_2 = completelyNonMatch_2
                   
-                  completelyNonMatch_2 = completelyNonMatch_2.filter((item3, index3) => {
-                    return completelyNonMatch_2.indexOf(item3) === index3
-                  });
-                  
-                  completelyNonMatch_2 = lodash.xor(partialMatch_2, completelyNonMatch_2)
-                  console.log('comlete2', completelyNonMatch_2)
+                 
                 }
                 
               }
@@ -231,9 +241,48 @@ export default {
             })
           }
           
-        }) */
-    
+        }) 
+       
+     },
+
+     resultOutput() {
+      this.completelyNonMatch_1.forEach(el => {
+        this.firstTable.forEach((el2, index) => {
+          if(lodash.isEqual(el, el2)) {
+            el['index'] = index + 2 //номер строки в excel файле 1
+          }
+        })
+      })
+
+      this.completelyNonMatch_2.forEach(el => {
+        this.secondTable.forEach((el2, index) => {
+          if(lodash.isEqual(el, el2)) {
+            el['index'] = index + 2 //номер строки в excel файле 2
+          }
+        })
+      })
      }
   }
 }
 </script>
+
+<style>
+.res-blck {
+  background-color: white;
+  height: 50vh;
+  padding: 20px;
+  text-align: left;
+  border-radius: 30px;
+  overflow: scroll;
+  font-size: 20px;
+  width: 90%;
+}
+.row {
+  display: block;
+  background-color: rgb(255, 255, 255);
+  border-radius: 30px;
+  box-shadow: 0 0px 8px rgb(201, 201, 201);
+  margin-top: 10px;
+  padding: 10px;
+}
+</style>
