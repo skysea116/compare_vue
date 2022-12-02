@@ -7,7 +7,7 @@
         <fileUpload fileNum = 2  />
       </div>
     </div>
-    <div class="button" v-if="this.$store.getters.FIRST_TABLE !== '' && this.$store.getters.SECOND_TABLE">
+    <div class="button" v-if="(this.$store.getters.FIRST_TABLE  && this.$store.getters.SECOND_TABLE)">
       <nextButton ButtonNum = 1 />
     </div>
     
@@ -25,6 +25,7 @@ export default {
     fileUpload,
     nextButton
   },
+
 }
 </script>
 

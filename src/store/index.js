@@ -77,6 +77,28 @@ export default new Vuex.Store({
     }
    },
 
+   warnings: {
+    state: {
+      isShow_1: '',
+      isShow_2: '',
+    },
+    getters: {
+      WARNING_1(state) {
+        return state.isShow_1
+      },
+      WARNING_2(state) {
+        return state.isShow_2
+      },
+    },
+    mutations: {
+      SET_WARNING_1: (state, payload) => { 
+        state.isShow_1 = payload;
+      },
+      SET_WARNING_2: (state, payload) => { 
+        state.isShow_2 = payload;
+      },
+    },
+   }
    
   }
 })

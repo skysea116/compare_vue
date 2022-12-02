@@ -1,7 +1,10 @@
 <template>
      <div class="res-blck">
       <!--Вывод полученных данных о не совпадающих строках на страницу-->
-      <span> 
+      <div class="warning" v-if="(nonMatched_1 == '' && nonMatched_2 == '')">
+        <p>Разницы нет!</p>
+      </div>
+      <span v-else> 
           <span v-for="(item) in completelyNonMatch_1" :key="item" class="row"> <!--Полностью не совпадающие строки в первой таблице-->
             <span><b>Строка {{ item.index }}</b> файла "{{ firstFile }}", содержащая </span>
               <span v-for="(item2, index2) in item" :key="item2">
@@ -75,7 +78,6 @@ export default {
      partialMatch_2: '', //частично равные строки из второй таблицы
      completelyNonMatch_2: '', //полностью не равные строки из второй таблицы
      partlyOutput: '', //массив всех частично совпадающих строк для вывода
-     isLoaded: false,
     }
   },
 
@@ -83,7 +85,6 @@ export default {
      this.toGetSelectedData() 
      this.toCompareIt()
      this.resultOutput()
-     this.loading()
   },
 
   methods: {
@@ -277,7 +278,6 @@ export default {
 
     //для частично совпадающих строк
       let partlyOutput = [];
-
       this.partialMatch_1.forEach(el => {
 
         this.firstTable.forEach((e, index) => {
@@ -312,11 +312,11 @@ export default {
       }
       })
      
-
-
-
+     
      },
 
+  
+     
   }
 }
 </script>
@@ -331,6 +331,9 @@ export default {
   overflow: scroll;
   font-size: 20px;
   width: 90%;
+}
+.warning {
+  text-align: center;
 }
 .res-blck::-webkit-scrollbar {
     width: 0;

@@ -1,17 +1,41 @@
 <template>
   <div class="container">
-    <div v-if="fileNum === '1'">
-      <label v-if="file !== '' || this.$store.getters.FIRST_FILE !== ''" for="sheetjs-input1">{{ this.$store.getters.FIRST_FILE }}</label>
-      <label v-else for="sheetjs-input1">Выберите файл {{fileNum}}: </label>
+
+    <span v-for="item in headers" :key="item">
+      <span v-if="fileNum === '1'"> 
+
+        <div class="warning" v-if="item[item.length - 1] === ' '">
+
+          <p>Столбец "{{ item }} " имеет лишний пробел! <br><br><span>Удалите его для корректной работы!</span> </p>
+
+        </div>
+
+      </span>
+      <span v-else> 
+
+        <div class="warning" v-if="item[item.length - 1] === ' '">
+
+          <p>Столбец "{{ item }} " имеет лишний пробел! <br><br><span>Удалите его для корректной работы!</span> </p>
+
+        </div>
+
+      </span>
+    </span>
+    <div>
+
+      <div v-if="fileNum === '1'">
+        <label v-if="file !== '' || this.$store.getters.FIRST_FILE !== ''" for="sheetjs-input1">{{ this.$store.getters.FIRST_FILE }}</label>
+        <label v-else for="sheetjs-input1">Выберите файл {{fileNum}}: </label>
+      </div>
+      <div v-else>
+        <label v-if="file !== '' || this.$store.getters.SECOND_FILE !== ''" for="sheetjs-input2">{{ this.$store.getters.SECOND_FILE  }}</label>
+        <label v-else for="sheetjs-input2">Выберите файл {{fileNum}}: </label>
+      </div>
+      <input v-if="fileNum === '1'" type="file" multiple="false" id="sheetjs-input1" :accept="SheetJSFT" @change="onchange" />
+      <input v-else type="file" multiple="false" id="sheetjs-input2" :accept="SheetJSFT" @change="onchange" />
+      <br/>
+
     </div>
-    <div v-else>
-      <label v-if="file !== '' || this.$store.getters.SECOND_FILE !== ''" for="sheetjs-input2">{{ this.$store.getters.SECOND_FILE  }}</label>
-      <label v-else for="sheetjs-input2">Выберите файл {{fileNum}}: </label>
-    </div>
-    <input v-if="fileNum === '1'" type="file" multiple="false" id="sheetjs-input1" :accept="SheetJSFT" @change="onchange" />
-    <input v-else type="file" multiple="false" id="sheetjs-input2" :accept="SheetJSFT" @change="onchange" />
-    <br/>
-    <div id="out-table"></div>
   </div>
 </template>
 <script>
@@ -22,7 +46,18 @@ import { read, utils } from 'xlsx';
     data(){
       return {
         file: '',
-        SheetJSFT: ["xlsx", "xlsb", "xlsm", "xls"].map(function(x) { return "." + x; }).join(",") //разрешённые форматы файлов к загрузке
+        SheetJSFT: ["xlsx", "xlsb", "xlsm", "xls"].map(function(x) { return "." + x; }).join(","), //разрешённые форматы файлов к загрузке
+        isShow_1: false,
+        isShow_2: false,
+        warnColumn_1: '',
+        warnColumn_2: '',
+        headers: '',
+      }
+    },
+    computed: {
+      warningCondition: function() {
+        console.log('aaaa')
+        return 'aaa'
       }
     },
     methods: {
@@ -49,9 +84,11 @@ import { read, utils } from 'xlsx';
         
           let rows = utils.sheet_to_json(ws);
 
-          /* update table */
           this.setToVuex(rows)
+
+          this.headers = Object.keys(rows[0]);
         };
+        
         reader.readAsArrayBuffer(this.file);
     },
 
@@ -63,6 +100,7 @@ import { read, utils } from 'xlsx';
         this.$store.commit('SET_2_TABLE_TO_STATE', obj);
         this.$store.commit('SET_2_FILE_NAME', this.file.name);
       }
+
     },
 
 
@@ -94,5 +132,15 @@ import { read, utils } from 'xlsx';
   }
   #sheetjs-input1, #sheetjs-input2 {
     display: none;
+  }
+  .warning {
+    padding: 15px;
+    background-color: rgb(209, 90, 90);
+    border-radius: 30px;
+    border: 7px solid rgba(255, 255, 255, 0.865);
+    font-size: 30px;
+    margin-bottom: 20px;
+    color: white;
+    font-weight: bold;
   }
 </style>
