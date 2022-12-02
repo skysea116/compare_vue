@@ -7,13 +7,13 @@
 
 <script>
 import resultOfCompare from '@/components/resultOfCompare.vue'
-//v-for="table2 in firstTable" :key="table2.h"
 export default {
-  name: 'ResultView',
+  name: 'LoadingView',
   components: {
     resultOfCompare,
   },
 
+  
 }
 </script>
 
@@ -23,5 +23,6 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
   }
 </style>

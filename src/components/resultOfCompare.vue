@@ -1,6 +1,8 @@
 <template>
      <div class="res-blck">
-          <span v-for="(item) in completelyNonMatch_1" :key="item" class="row">
+      <!--Вывод полученных данных о не совпадающих строках на страницу-->
+      <span> 
+          <span v-for="(item) in completelyNonMatch_1" :key="item" class="row"> <!--Полностью не совпадающие строки в первой таблице-->
             <span><b>Строка {{ item.index }}</b> файла "{{ firstFile }}", содержащая </span>
               <span v-for="(item2, index2) in item" :key="item2">
                 
@@ -11,7 +13,7 @@
           </span>
 
 
-          <span v-for="(item) in completelyNonMatch_2" :key="item" class="row">
+          <span v-for="(item) in completelyNonMatch_2" :key="item" class="row"> <!--Полностью не совпадающие строки во второй таблице-->
             <span><b>Строка {{ item.index }}</b> файла "{{ secondFile}}", содержащая </span>
               <span v-for="(item2, index2) in item" :key="item2">
                 
@@ -23,7 +25,7 @@
           </span>
           
           
-          <span v-for="(item) in partlyOutput" :key="item" class="row">
+          <span v-for="(item) in partlyOutput" :key="item" class="row"> <!--Частично не совпадающие строки-->
 
             <span v-for="(item2, index2) in item" :key="item2" >
               
@@ -50,28 +52,30 @@
             </span>
 
           </span>
-
+        </span>
      </div>
 </template>
 
 <script>
 import lodash from 'lodash'
 export default {
+
   data() {
     return {
-     firstTable: this.$store.getters.FIRST_TABLE,
+     firstTable: this.$store.getters.FIRST_TABLE, 
      secondTable: this.$store.getters.SECOND_TABLE,
-     selected_1: this.$store.getters.SELECTED_PARAMS_1,
-     selected_2: this.$store.getters.SELECTED_PARAMS_2,
-     nonMatched_1: '',
-     nonMatched_2: '',
-     firstFile: this.$store.getters.FIRST_FILE ,
-     secondFile: this.$store.getters.SECOND_FILE ,
-     partialMatch_1: '',
-     completelyNonMatch_1: '',
-     partialMatch_2: '',
-     completelyNonMatch_2: '',
-     partlyOutput: '',
+     selected_1: this.$store.getters.SELECTED_PARAMS_1, //выбранные параметры первой таблицы
+     selected_2: this.$store.getters.SELECTED_PARAMS_2, //выбранные параметры второй таблицы
+     nonMatched_1: '', //все несовпадающие строки первой таблицы
+     nonMatched_2: '',//все несовпадающие строки второй таблицы
+     firstFile: this.$store.getters.FIRST_FILE , //имя первого файла
+     secondFile: this.$store.getters.SECOND_FILE , //имя второго файла
+     partialMatch_1: '', //частично равные строки из первой таблицы
+     completelyNonMatch_1: '', //полностью не равные строки из первой таблицы
+     partialMatch_2: '', //частично равные строки из второй таблицы
+     completelyNonMatch_2: '', //полностью не равные строки из второй таблицы
+     partlyOutput: '', //массив всех частично совпадающих строк для вывода
+     isLoaded: false,
     }
   },
 
@@ -79,11 +83,14 @@ export default {
      this.toGetSelectedData() 
      this.toCompareIt()
      this.resultOutput()
+     this.loading()
   },
 
   methods: {
-     toGetSelectedData() {
-     //извлеяение данных нужных параметров первой таблицы
+    
+     toGetSelectedData() { //получение данных из таблиц с учётом выбранных параметров
+
+     //извлечение данных нужных параметров первой таблицы
       let firstTable = this.firstTable.slice()
 
         let itter = Object.keys(firstTable[0]).map(function(item) { 
@@ -98,9 +105,8 @@ export default {
             delete item[del]; 
           }
         });
-        console.log('1', firstTable)
 
-        //извлеяение данных нужных параметров второй таблицы
+        //извлечение данных нужных параметров второй таблицы
         let secondTable = this.secondTable.slice()
 
         let itter2 = Object.keys(secondTable[0]).map(function(item) { 
@@ -115,30 +121,19 @@ export default {
             delete item[del2]; 
           }
         });
-        console.log('2', secondTable)
      }, 
 
-     toCompareIt() {
+     toCompareIt() { //сравнение данных из таблиц
       let table_1 = this.firstTable
-      
 
-
-      console.log('table11111', this.firstTable)
-       
       let table_2 = this.secondTable
  
-      let matched_1 = []
-      let nonMatched_1 = []
+      let matched_1 = [] //совпадающие строки из первой таблицы
+      let nonMatched_1 = [] 
 
-      let matched_2 = []
+      let matched_2 = [] //совпадающие строки из второй таблицы
       let nonMatched_2 = []
 
-      if(nonMatched_1 === [] && nonMatched_2 === []) {
-        this.equalMsg = 'Загруженные файлы полностью совпадают!'
-        console.log('aaa', this.equalMsg)
-       } else {
-        this.equalMsg = ''
-       }
         //поиск всех разных строк из первой таблицы
         table_1.forEach((row, index) => {
 
@@ -152,17 +147,12 @@ export default {
 
           table_2.forEach((row2) => {
             if(lodash.isEqual(row, row2)) {
-              
-              
-              matched_1.push(table_1[index])
-             //console.log('+', matched)
-             nonMatched_1 = table_1.filter(val => !matched_1.includes(val))
-             
-            } else {
-              
-              console.log('НЕСовпало')
 
-            }
+              matched_1.push(table_1[index])
+
+              nonMatched_1 = table_1.filter(val => !matched_1.includes(val))
+             
+            } 
           })
         }); 
         this.nonMatched_1 = nonMatched_1
@@ -185,14 +175,9 @@ export default {
               
               
               matched_2.push(table_2[index2])
-             //console.log('+', matched)
              nonMatched_2 = table_2.filter(val => !matched_2.includes(val))
              
-            } else {
-              
-              console.log('НЕСовпало')
-
-            }
+            } 
           })
         }); 
         this.nonMatched_2 = nonMatched_2
@@ -232,7 +217,6 @@ export default {
           }
           
         }) 
-        console.log('comlete_1', this.completelyNonMatch_1, 'part_1', this.partialMatch_1)
 
         let partialMatch_2 = [];
        let completelyNonMatch_2 = [];
@@ -268,10 +252,12 @@ export default {
           }
           
         }) 
-        console.log('comlete_2', this.completelyNonMatch_2, 'part_2', this.partialMatch_2)
+        this.isLoaded = true
      },
 
-     resultOutput() {
+     resultOutput() { //функция вывода полученных данных сравнения на страницу
+
+      //для полностью несовпадающих строк
       this.completelyNonMatch_1.forEach(el => {
         this.firstTable.forEach((el2, index) => {
           if(lodash.isEqual(el, el2)) {
@@ -289,7 +275,7 @@ export default {
       })
       
 
-
+    //для частично совпадающих строк
       let partlyOutput = [];
 
       this.partialMatch_1.forEach(el => {
@@ -313,13 +299,11 @@ export default {
           for (let item2 in el2) {
 
             if(lodash.isEqual(el[item], el2[item2])) {
-              console.log('i1', el, 'i2', el2)
               partlyOutput.push({el1: el, el2: el2})
               const uniq = new Set(partlyOutput.map(e => JSON.stringify(e)));
 
               const res = Array.from(uniq).map(e => JSON.parse(e)); 
               this.partlyOutput = res
-              console.log('res', this.partlyOutput)
             }
             
           }
@@ -331,7 +315,8 @@ export default {
 
 
 
-     }
+     },
+
   }
 }
 </script>
@@ -347,6 +332,9 @@ export default {
   font-size: 20px;
   width: 90%;
 }
+.res-blck::-webkit-scrollbar {
+    width: 0;
+  }
 .row {
   display: block;
   background-color: rgb(255, 255, 255);

@@ -23,6 +23,7 @@ const routes = [
     component: ResultView
   },
 
+
 ]
 
 const router = new VueRouter({
@@ -30,5 +31,6 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
 
 export default router

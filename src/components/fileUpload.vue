@@ -22,42 +22,40 @@ import { read, utils } from 'xlsx';
     data(){
       return {
         file: '',
-        SheetJSFT: ["xlsx", "xlsb", "xlsm", "xls"].map(function(x) { return "." + x; }).join(",")
+        SheetJSFT: ["xlsx", "xlsb", "xlsm", "xls"].map(function(x) { return "." + x; }).join(",") //разрешённые форматы файлов к загрузке
       }
     },
     methods: {
 
       
-    onchange: function(evt) {
-        var files = evt.target.files;
+    onchange: function(evt) { //преобразование загруженных файлов в массив объектов с данными из таблиц
+        let files = evt.target.files;
         if (!files || files.length == 0) return;
 
         this.file = files[0];
 
-        var reader = new FileReader();
+        let reader = new FileReader();
         
         reader.onload = (e) => {
           // get data
-          var bytes = new Uint8Array(e.target.result);
+          let bytes = new Uint8Array(e.target.result);
 
           /* read workbook */
-          var wb = read(bytes);
+          let wb = read(bytes);
           
           /* grab first sheet */
-          var wsname = wb.SheetNames[0];
-          var ws = wb.Sheets[wsname];
+          let wsname = wb.SheetNames[0];
+          let ws = wb.Sheets[wsname];
         
-          /* generate HTML */
-          var rows = utils.sheet_to_json(ws);
+          let rows = utils.sheet_to_json(ws);
 
           /* update table */
-          //document.getElementById('out-table').innerHTML = HTML;
           this.setToVuex(rows)
         };
         reader.readAsArrayBuffer(this.file);
     },
 
-    setToVuex(obj) {
+    setToVuex(obj) { //передача данных во vuex
       if (this.fileNum === '1') {
         this.$store.commit('SET_1_TABLE_TO_STATE', obj);
         this.$store.commit('SET_1_FILE_NAME', this.file.name);

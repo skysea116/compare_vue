@@ -1,10 +1,10 @@
 <template>
      <div class="compare">
          <li >
-           <div class="select" v-if="fileNum === '1'">
+           <div class="select" v-if="fileNum === '1'"> <!--Список параметров первого файла-->
              <select @change="getSelectValue()" v-model="selected_1" multiple>
               <option selected="selected" disabled value="---" >
-                   <p>Выберите параметры</p>
+                   <p>Выберите параметры:</p>
                </option>
                <option  v-for="table2 in headers" :key="table2" title="ctrl + ЛКМ">
                    <p>{{ table2 }}</p>
@@ -13,10 +13,10 @@
              </select>
            </div>
 
-           <div class="select" v-if="fileNum === '2'">
+           <div class="select" v-if="fileNum === '2'"> <!--Список параметров второго файла-->
              <select @change="getSelectValue()" v-model="selected_2" multiple>
               <option selected="selected" disabled value="---" title="ctrl + ЛКМ для множественного выбора">
-                   <p>Выберите параметры</p>
+                   <p>Выберите параметры:</p>
                </option>
                <option  v-for="table2 in headers" :key="table2" title="ctrl + ЛКМ">
                    <p>{{ table2 }}</p>
@@ -37,9 +37,9 @@ export default {
     return {
       firstTable: this.$store.getters.FIRST_TABLE,
       secondTable: this.$store.getters.SECOND_TABLE,
-      headers: [],
-      selected_1: [],
-      selected_2: [],
+      headers: [], //параметры
+      selected_1: [], //выбранные параметры из первой таблицы
+      selected_2: [], //выбранные параметры из второй таблицы
     }
   },
 
@@ -49,7 +49,7 @@ mounted() {
 
   methods: {
 
-    toHeaders() {
+    toHeaders() { //получение имён параметров
       if(this.fileNum === '1') {
         for(let item in this.firstTable[0]) {
             this.headers.push(item)
@@ -61,7 +61,7 @@ mounted() {
       }
       this.headers.sort();
     },
-    getSelectValue() {
+    getSelectValue() { //передача выбранных параметров во vuex
       if(this.fileNum === '1') {
         this.$store.commit('SET_1_SELECTED_PARAMS', this.selected_1)
       } else {
@@ -76,18 +76,31 @@ mounted() {
   select {
     font-size: 24px;
     width: 22vw;
+    height: auto;
     padding: 10px 20px;
     border-radius: 30px;
     border: none;
     margin: 5px 0;
     transition: all 0.2s;
   }
+  select::-webkit-scrollbar {
+    width: 0;
+  }
   option {
     transition: all 0.1s;
     border-radius: 30px;
+    padding: 17px;
+    margin-top: 10px;
+    box-shadow: 0 0 10px rgb(177, 177, 177);
+  }
+  option:first-child {
+    color: lightgray
   }
   option:first-child:hover {
-    cursor: pointer;
+    color: lightgray;
+    cursor: default;
+    background-color: rgb(255, 255, 255);
+
   }
   option:hover {
     transition: all 0.2s;
