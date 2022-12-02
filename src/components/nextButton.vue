@@ -38,5 +38,8 @@ a:hover {
     background-color: rgb(224, 224, 224);
     color: rgb(70, 194, 121);
 }
+.but {
+  margin-top: 7vh;
+}
 </style>
 
