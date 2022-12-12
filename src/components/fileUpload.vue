@@ -22,14 +22,17 @@
       </span>
     </span>
     <div>
-
-      <div v-if="fileNum === '1'">
-        <label v-if="file !== '' || this.$store.getters.FIRST_FILE !== ''" for="sheetjs-input1">{{ this.$store.getters.FIRST_FILE }}</label>
+      
+      <div v-if="fileNum === '1'" class="upload">
+        <label v-if="this.$store.getters.FIRST_FILE !== ''" for="sheetjs-input1">{{ this.$store.getters.FIRST_FILE }}</label>
         <label v-else for="sheetjs-input1">Выберите файл {{fileNum}}: </label>
+        <span  v-if="this.$store.getters.FIRST_FILE !== ''" @click="fileDel(1)" class="delBut">✕</span>
+        
       </div>
-      <div v-else>
-        <label v-if="file !== '' || this.$store.getters.SECOND_FILE !== ''" for="sheetjs-input2">{{ this.$store.getters.SECOND_FILE  }}</label>
+      <div v-else class="upload">
+        <label v-if="this.$store.getters.SECOND_FILE !== ''" for="sheetjs-input2">{{ this.$store.getters.SECOND_FILE  }}</label>
         <label v-else for="sheetjs-input2">Выберите файл {{fileNum}}: </label>
+        <span  v-if="this.$store.getters.SECOND_FILE !== ''" @click="fileDel(2)" class="delBut">✕</span>
       </div>
       <input v-if="fileNum === '1'" type="file" multiple="false" id="sheetjs-input1" :accept="SheetJSFT" @change="onchange" />
       <input v-else type="file" multiple="false" id="sheetjs-input2" :accept="SheetJSFT" @change="onchange" />
@@ -103,6 +106,16 @@ import { read, utils } from 'xlsx';
 
     },
 
+    fileDel(fileNum) {
+      if(fileNum === 1) {
+        this.$store.commit('SET_1_TABLE_TO_STATE', '');
+        this.$store.commit('SET_1_FILE_NAME', '');
+      } else {
+        this.$store.commit('SET_2_TABLE_TO_STATE', '');
+        this.$store.commit('SET_2_FILE_NAME', '');
+      }
+    }
+
 
 
   }
@@ -142,5 +155,22 @@ import { read, utils } from 'xlsx';
     margin-bottom: 20px;
     color: white;
     font-weight: bold;
+  }
+  .upload {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  .delBut {
+    font-size: 29px;
+    font-weight: bold;
+    margin-left: 15px;
+    transition: all 0.2s;
+  }
+  .delBut:hover {
+    color: rgb(194, 43, 43);
+    cursor: pointer;
+    transition: all 0.2s;
   }
 </style>
