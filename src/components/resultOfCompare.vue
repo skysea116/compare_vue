@@ -1,11 +1,15 @@
 <template>
      <div class="res-blck">
       <!--Вывод полученных данных о не совпадающих строках на страницу-->
-      <div class="warning" v-if="(nonMatched_1 == '' && nonMatched_2 == '')">
-        <p>Разницы нет!</p>
-      </div>
-      <span v-else> 
-          <span v-for="(item) in completelyNonMatch_1" :key="item" class="row"> <!--Полностью не совпадающие строки в первой таблице-->
+      
+      <span v-if="(nonMatched_1.length && nonMatched_2.length)"> 
+
+        
+        <span v-for="(item) in completelyNonMatch_1" :key="item"> <!--Полностью не совпадающие строки в первой таблице-->
+
+          <span v-if="item !== undefined" class="row">
+
+
             <span><b>Строка {{ item.index }}</b> файла "{{ firstFile }}", содержащая </span>
               <span v-for="(item2, index2) in item" :key="item2">
                 
@@ -14,23 +18,31 @@
               <span class="type-of-output"> полностью отсутсвуют</span> в  <b>{{ secondFile }}</b><br>
             
           </span>
+        </span>
 
 
-          <span v-for="(item) in completelyNonMatch_2" :key="item" class="row"> <!--Полностью не совпадающие строки во второй таблице-->
-            <span><b>Строка {{ item.index }}</b> файла "{{ secondFile}}", содержащая </span>
-              <span v-for="(item2, index2) in item" :key="item2">
-                
-                <span v-if="index2 !== 'index'"> {{ index2 }}: <b>{{item2}} </b> </span>
+
+            <span v-for="item_ in completelyNonMatch_2" :key="item_" > <!--Полностью не совпадающие строки во второй таблице-->
+
+              <span v-if="item_ !== undefined" class="row">
+
+                <span><b>Строка {{ item_.index }}</b> файла "{{ secondFile}}", содержащая </span>
+                  <span v-for="(item2_, index2_) in item_" :key="item2_">
+                    
+                    <span v-if="index2_ !== 'index'"> {{ index2_ }}: <b>{{item2_}} </b> </span>
+                    
+                  </span>
+                <span class="type-of-output"> полностью отсутсвуют</span> в <b>{{ firstFile }}</b><br>
                 
               </span>
-             <span class="type-of-output"> полностью отсутсвуют</span> в <b>{{ firstFile }}</b><br>
-            
-          </span>
+
+            </span>
+          
           
           
           <span v-for="(item) in partlyOutput" :key="item" class="row"> <!--Частично не совпадающие строки-->
 
-            <span v-for="(item2, index2) in item" :key="item2" >
+            <span v-for="(item2, index2) in item" :key="item2.index" >
               
               
               <span v-if="index2 === 'el1'">
@@ -56,6 +68,9 @@
 
           </span>
         </span>
+        <div class="warning" v-else>
+        <p>Разницы нет!</p>
+        </div>
      </div>
 </template>
 
@@ -92,14 +107,13 @@ export default {
      toGetSelectedData() { //получение данных из таблиц с учётом выбранных параметров
 
      //извлечение данных нужных параметров первой таблицы
-      let firstTable = this.firstTable.slice()
 
-        let itter = Object.keys(firstTable[0]).map(function(item) { 
+        let itter = Object.keys(this.firstTable[0]).map(function(item) { 
           return item.trim()
         });
         let del = itter.filter(x => !this.selected_1.includes(x));
         del.join()
-         firstTable.map(function(item) { 
+         this.firstTable.map(function(item) { 
           if(item[del] === undefined) {
             delete item[del + ' ']; 
           } else {
@@ -108,14 +122,13 @@ export default {
         });
 
         //извлечение данных нужных параметров второй таблицы
-        let secondTable = this.secondTable.slice()
 
-        let itter2 = Object.keys(secondTable[0]).map(function(item) { 
+        let itter2 = Object.keys(this.secondTable[0]).map(function(item) { 
           return item.trim()
         });
         let del2 = itter2.filter(x => !this.selected_1.includes(x));
         del2.join()
-         secondTable.map(function(item) { 
+         this.secondTable.map(function(item) { 
           if(item[del2] === undefined) {
             delete item[del2 + ' ']; 
           } else {
@@ -136,40 +149,30 @@ export default {
       let nonMatched_2 = []
 
         //поиск всех разных строк из первой таблицы
-        table_1.forEach((row, index) => {
+        table_1.forEach((row) => {
 
-          table_1[index] = Object.keys(row).sort().reduce(
-            (obj, key) => { 
-              obj[key] = row[key]; 
-              return obj;
-            }, 
-          {}
-        );
+         
 
           table_2.forEach((row2) => {
-            if(lodash.isEqual(row, row2)) {
-
-              matched_1.push(table_1[index])
-
+            //console.log('r1', row, 'r2', row2)
+            if(lodash.isEqual(row, row2)) { ///!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+              matched_1.push(row)
+              
               nonMatched_1 = table_1.filter(val => !matched_1.includes(val))
-             
+              
             } 
           })
+          
         }); 
+        
         this.nonMatched_1 = nonMatched_1
-
+        
         
 
         //поиск всех разных строк из второй таблицы
         table_2.forEach((row2, index2) => {
 
-          table_2[index2] = Object.keys(row2).sort().reduce(
-            (obj, key) => { 
-              obj[key] = row2[key]; 
-              return obj;
-            }, 
-          {}
-        );
+         
 
           table_1.forEach((row) => {
             if(lodash.isEqual(row2, row)) {
@@ -183,7 +186,6 @@ export default {
         }); 
         this.nonMatched_2 = nonMatched_2
 
-
        let partialMatch_1 = [];
        let completelyNonMatch_1 = [];
 
@@ -195,7 +197,7 @@ export default {
              
               for(let item2 in nonRow2) { //поиск частично совпадающих объектов
 
-                if(lodash.isEqual( nonRow[item], nonRow2[item2])) {
+                if(nonRow[item] === nonRow2[item2]) {
 
                   partialMatch_1.push(nonMatched_1.find(non => non[item] === nonRow[item]))
                   partialMatch_1 = partialMatch_1.filter((item3, index3) => {
@@ -218,6 +220,7 @@ export default {
           }
           
         }) 
+        console.log('part1', this.partialMatch_1, 'comp1',  this.completelyNonMatch_1)
 
         let partialMatch_2 = [];
        let completelyNonMatch_2 = [];
@@ -229,7 +232,7 @@ export default {
              
               for(let item in nonRow) {
 
-                if(lodash.isEqual( nonRow[item], nonRow2[item2])) {
+                if( nonRow[item] === nonRow2[item2]) {
 
                   partialMatch_2.push(nonMatched_2.find(non => non[item] === nonRow[item]))
 
@@ -254,6 +257,7 @@ export default {
           
         }) 
         this.isLoaded = true
+       
      },
 
      resultOutput() { //функция вывода полученных данных сравнения на страницу
