@@ -2,6 +2,7 @@
      <div class="compare">
          <li >
            <div class="select" v-if="fileNum === '1'"> <!--Список параметров первого файла-->
+            <h3>{{ this.$store.getters.FIRST_FILE }}</h3>
              <select @change="getSelectValue()" v-model="selected_1" multiple>
               <option selected="selected" disabled value="---" >
                    <p>Выберите параметры:</p>
@@ -14,6 +15,7 @@
            </div>
 
            <div class="select" v-if="fileNum === '2'"> <!--Список параметров второго файла-->
+            <h3>{{ this.$store.getters.SECOND_FILE }}</h3>
              <select @change="getSelectValue()" v-model="selected_2" multiple>
               <option selected="selected" disabled value="---" title="ctrl + ЛКМ для множественного выбора">
                    <p>Выберите параметры:</p>
@@ -59,7 +61,7 @@ mounted() {
             this.headers.push(item)
         }
       }
-      this.headers.sort();
+      this.headers;
     },
     getSelectValue() { //передача выбранных параметров во vuex
       if(this.fileNum === '1') {
@@ -75,7 +77,7 @@ mounted() {
 <style>
   select {
     font-size: 24px;
-    width: 22vw;
+    width: 25vw;
     height: auto;
     padding: 10px 20px;
     border-radius: 30px;
@@ -92,9 +94,11 @@ mounted() {
     padding: 17px;
     margin-top: 10px;
     box-shadow: 0 0 10px rgb(177, 177, 177);
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   option:first-child {
-    color: lightgray
+    color: lightgray;
   }
   option:first-child:hover {
     color: lightgray;
@@ -110,6 +114,12 @@ mounted() {
   }
   li {
     list-style: none;
+  }
+  .compare h3 {
+    display: block;
+    height: 7vh !important;
+    width: 25vw !important;
+    
   }
 
 </style>

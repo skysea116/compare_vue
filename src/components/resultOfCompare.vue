@@ -42,7 +42,7 @@
           
           <span v-for="(item) in partlyOutput" :key="item" class="row"> <!--Частично не совпадающие строки-->
 
-            <span v-for="(item2, index2) in item" :key="item2.index" >
+            <span v-for="(item2, index2) in item" :key="item2" >
               
               
               <span v-if="index2 === 'el1'">
@@ -155,7 +155,7 @@ export default {
 
           table_2.forEach((row2) => {
             //console.log('r1', row, 'r2', row2)
-            if(lodash.isEqual(row, row2)) { ///!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ERROR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            if(lodash.isEqual(row, row2)) { 
               matched_1.push(row)
               
               nonMatched_1 = table_1.filter(val => !matched_1.includes(val))

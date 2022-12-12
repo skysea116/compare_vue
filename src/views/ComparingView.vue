@@ -3,11 +3,9 @@
     <h2>Выберите параметры для сравнения</h2>
     <div class="top-comp">
       <div class="one">
-        <h3>{{ this.$store.getters.FIRST_FILE }}</h3>
         <comparingFiles fileNum = 1 />
       </div>
       <div class="two">
-        <h3>{{ this.$store.getters.SECOND_FILE }}</h3>
         <comparingFiles fileNum = 2 />
       </div>
     </div>
@@ -39,21 +37,29 @@ export default {
     height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
   }
   .comp h2 {
     margin-bottom: 0;
   }
   .comp h3 {
-    font-size: 35px;
+    margin-top: 70px;
+    font-size: 29px;
+    overflow: auto;
+    width: auto;
+    height: auto
   }
   .top-comp {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
   }
   .but-wrap {
     height: 11vh;
     margin-bottom: 30px;
+  }
+  .one {
+    margin-right: 40px;
   }
   
 </style>
