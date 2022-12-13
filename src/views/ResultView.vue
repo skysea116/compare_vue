@@ -2,6 +2,7 @@
      <div class="result">
           <h2>Результат</h2>
           <resultOfCompare />
+          
      </div>
 </template>
 
@@ -25,4 +26,5 @@ export default {
     align-items: center;
     width: 100%;
   }
+
 </style>

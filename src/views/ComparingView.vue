@@ -62,4 +62,5 @@ export default {
     margin-right: 40px;
   }
   
+  
 </style>
