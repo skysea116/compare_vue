@@ -1,7 +1,11 @@
 <template>
   <div class="comp">
     <h2>Выберите параметры для сравнения</h2>
+    <div class="warning" v-if="isWarn">
+        Проверьте, чтобы соответсвующие параметры находились друг напротив друга!
+      </div>
     <div class="top-comp">
+      
       <div class="one">
         <comparingFiles fileNum = 1 />
       </div>
@@ -17,7 +21,7 @@
   </div>
 </template>
 <script>
-// @ is an alias to /src
+import lodash from 'lodash'
 import nextButton from '@/components/nextButton.vue'
 import comparingFiles from '@/components/comparingFiles.vue'
 //v-for="table2 in firstTable" :key="table2.h"
@@ -27,6 +31,24 @@ export default {
     nextButton,
     comparingFiles
   },
+  data() {
+    return {
+      isWarn: false,
+    }
+  },
+  
+  mounted() {
+    this.toWarn()
+  },
+  methods: {
+    toWarn() {
+      if(!lodash.isEqual(this.$store.getters.SELECTED_PARAMS_1, this.$store.getters.SELECTED_PARAMS_2)) {
+        this.isWarn = true
+      } else {
+        this.isWarn = false
+      }
+    }
+  }
 
 }
 </script>
@@ -39,6 +61,10 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+  .comp .warning {
+    background-color: rgb(252, 188, 70);
+    margin-top: 39px;
   }
   .comp h2 {
     margin-bottom: 0;

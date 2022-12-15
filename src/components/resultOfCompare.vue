@@ -106,6 +106,39 @@ export default {
     
      toGetSelectedData() { //получение данных из таблиц с учётом выбранных параметров
 
+      let keys_1 = []
+      let keys_2 = []
+
+      let intersection_1 = this.selected_1.filter(x => !this.selected_2.includes(x));
+      let intersection_2 = this.selected_2.filter(x => !this.selected_1.includes(x));
+
+      console.log(intersection_1, intersection_2)
+
+      intersection_1.forEach(item => {
+       
+        keys_1.push({index: this.selected_1.indexOf(item), key: item})
+      })
+      intersection_2.forEach(item => {
+        
+        keys_2.push({index: this.selected_2.indexOf(item), key: item})
+      })
+
+      keys_1.forEach(item => {
+        keys_2.forEach(item2 => {
+          if(item.index == item2.index) {
+            console.log(item.index, item2.index)
+            this.secondTable = this.secondTable.map(function (obj) {
+              console.log(obj)
+              obj[item.key] = obj[item2.key];
+              delete obj[item2.key];
+              return obj;
+            })
+          }
+        })
+      })
+
+
+      console.log( this.firstTable, this.secondTable)
      //извлечение данных нужных параметров первой таблицы
 
         let itter = Object.keys(this.firstTable[0]).map(function(item) { 
