@@ -88,7 +88,8 @@ export default {
      nonMatched_2: [],//все несовпадающие строки второй таблицы
      firstFile: this.$store.getters.FIRST_FILE , //имя первого файла
      secondFile: this.$store.getters.SECOND_FILE , //имя второго файла
-     partlyOutput: '', //массив всех частично совпадающих строк для вывода
+     partialMatch_1: [], //частично равные строки из первой таблицы
+     partialMatch_2: [], //частично равные строки из второй таблицы
      allMatched_1: [],
      allMatched_2: [],
     }
