@@ -3,6 +3,7 @@ import App from './App.vue'
 import store from './store'
 import router from './router'
 import NProgress from 'nprogress';
+import VueWorker from 'vue-worker';
 import  '../node_modules/nprogress/nprogress.css'
 Vue.config.productionTip = false
 
@@ -23,4 +24,4 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-
+Vue.use(VueWorker);

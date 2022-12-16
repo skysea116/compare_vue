@@ -2,10 +2,10 @@
      <div class="res-blck">
       <!--Вывод полученных данных о не совпадающих строках на страницу-->
       
-      <span v-if="(nonMatched_1.length && nonMatched_2.length)"> 
+      <span v-if="(nonMatched_1.length || nonMatched_2.length)"> 
 
         
-        <span v-for="(item) in completelyNonMatch_1" :key="item"> <!--Полностью не совпадающие строки в первой таблице-->
+        <span v-for="(item) in nonMatched_1" :key="item"> <!--Полностью не совпадающие строки в первой таблице-->
 
           <span v-if="item !== undefined" class="row">
 
@@ -22,7 +22,7 @@
 
 
 
-            <span v-for="item_ in completelyNonMatch_2" :key="item_" > <!--Полностью не совпадающие строки во второй таблице-->
+            <span v-for="item_ in nonMatched_2" :key="item_" > <!--Полностью не совпадающие строки во второй таблице-->
 
               <span v-if="item_ !== undefined" class="row">
 
@@ -40,12 +40,12 @@
           
           
           
-          <span v-for="(item) in partlyOutput" :key="item" class="row"> <!--Частично не совпадающие строки-->
+          <span v-for="(item) in partialMatch_1" :key="item" class="row"> <!--Частично не совпадающие строки-->
 
             <span v-for="(item2, index2) in item" :key="item2" >
               
               
-              <span v-if="index2 === 'el1'">
+              <span v-if="index2 === 0">
                 <span><b>Строка {{item2.index}} </b>файла "{{ firstFile }}", содержащая </span>
 
                 <span v-for="(item3, index3) in item2" :key="item3">
@@ -84,22 +84,20 @@ export default {
      secondTable: this.$store.getters.SECOND_TABLE,
      selected_1: this.$store.getters.SELECTED_PARAMS_1, //выбранные параметры первой таблицы
      selected_2: this.$store.getters.SELECTED_PARAMS_2, //выбранные параметры второй таблицы
-     nonMatched_1: '', //все несовпадающие строки первой таблицы
-     nonMatched_2: '',//все несовпадающие строки второй таблицы
+     nonMatched_1: [], //все несовпадающие строки первой таблицы
+     nonMatched_2: [],//все несовпадающие строки второй таблицы
      firstFile: this.$store.getters.FIRST_FILE , //имя первого файла
      secondFile: this.$store.getters.SECOND_FILE , //имя второго файла
-     partialMatch_1: '', //частично равные строки из первой таблицы
-     completelyNonMatch_1: '', //полностью не равные строки из первой таблицы
-     partialMatch_2: '', //частично равные строки из второй таблицы
-     completelyNonMatch_2: '', //полностью не равные строки из второй таблицы
      partlyOutput: '', //массив всех частично совпадающих строк для вывода
+     allMatched_1: [],
+     allMatched_2: [],
     }
   },
 
   mounted() {
      this.toGetSelectedData() 
-     this.toCompareIt()
-     this.resultOutput()
+      this.toCompareIt()
+     
   },
 
   methods: {
@@ -169,132 +167,127 @@ export default {
      }, 
 
      toCompareIt() { //сравнение данных из таблиц
-      let table_1 = this.firstTable
+      let fisrtHeaders = Object.keys(this.firstTable[0]).sort()
+      let secondHeaders = Object.keys(this.secondTable[0]).sort()
 
-      let table_2 = this.secondTable
- 
-      let matched_1 = [] //совпадающие строки из первой таблицы
-      let nonMatched_1 = [] 
+      //данные которых нет во второй таблице
+      this.firstTable.forEach((dataFirstTable) => {
 
-      let matched_2 = [] //совпадающие строки из второй таблицы
-      let nonMatched_2 = []
+        let allNonFirst = true;
+        let particalMatched_1 = true;
+        let particalMatchedForRow = [];
 
-        //поиск всех разных строк из первой таблицы
-        table_1.forEach((row) => {
+        this.secondTable.forEach((dataSecondTable) => {
 
-         
+          let allMatched_1 = true;
+          let count = 0;
 
-          table_2.forEach((row2) => {
-            //console.log('r1', row, 'r2', row2)
-            if(lodash.isEqual(row, row2)) { 
-              matched_1.push(row)
-              
-              nonMatched_1 = table_1.filter(val => !matched_1.includes(val))
-              
-            } 
-          })
-          
-        }); 
-        
-        this.nonMatched_1 = nonMatched_1
-        
-        
+          fisrtHeaders.forEach((firstHeadersTable, index) => {
 
-        //поиск всех разных строк из второй таблицы
-        table_2.forEach((row2, index2) => {
+            let fisrtHeadersTable1 = firstHeadersTable;
+            let secondHeadersTable = secondHeaders[index];
 
-         
+            let celValue_1 = dataFirstTable[fisrtHeadersTable1] + " ";
+            let celValue_2 = dataSecondTable[secondHeadersTable] + " ";
 
-          table_1.forEach((row) => {
-            if(lodash.isEqual(row2, row)) {
-              
-              
-              matched_2.push(table_2[index2])
-             nonMatched_2 = table_2.filter(val => !matched_2.includes(val))
-             
-            } 
-          })
-        }); 
-        this.nonMatched_2 = nonMatched_2
+            if (celValue_1.trim() != celValue_2.trim()) {
+              allMatched_1 = false;
+              count++;
+            }
 
-       let partialMatch_1 = [];
-       let completelyNonMatch_1 = [];
+          });
 
-
-        //не совпадающие строки в первой таблице
-        nonMatched_1.forEach(nonRow => {
-          for(let item in nonRow) {
-            nonMatched_2.forEach(nonRow2 => {
-             
-              for(let item2 in nonRow2) { //поиск частично совпадающих объектов
-
-                if(nonRow[item] === nonRow2[item2]) {
-
-                  partialMatch_1.push(nonMatched_1.find(non => non[item] === nonRow[item]))
-                  partialMatch_1 = partialMatch_1.filter((item3, index3) => {
-                    return partialMatch_1.indexOf(item3) === index3
-                  });
-
-                  this.partialMatch_1 = partialMatch_1;
-
-                } else { //поиск полностью не свопадающих объектов
-      
-                  completelyNonMatch_1 = lodash.xor(partialMatch_1, nonMatched_1) 
-                  this.completelyNonMatch_1 = completelyNonMatch_1
-                  
-                 
-                }
-                
-              }
-
-            })
+          if (allMatched_1) {
+            allNonFirst = false;
+            this.allMatched_1.push([dataFirstTable, dataSecondTable]);
+            particalMatched_1 = false;
+            particalMatchedForRow = [];
           }
-          
-        }) 
-        console.log('part1', this.partialMatch_1, 'comp1',  this.completelyNonMatch_1)
 
-        let partialMatch_2 = [];
-       let completelyNonMatch_2 = [];
-
-        //не совпадающие строки во второй таблице
-        nonMatched_2.forEach(nonRow2 => {
-          for(let item2 in nonRow2) {
-            nonMatched_1.forEach(nonRow => {
-             
-              for(let item in nonRow) {
-
-                if( nonRow[item] === nonRow2[item2]) {
-
-                  partialMatch_2.push(nonMatched_2.find(non => non[item] === nonRow[item]))
-
-                  partialMatch_2 = partialMatch_2.filter((item3, index3) => {
-                    return partialMatch_2.indexOf(item3) === index3
-                  });
-
-                  this.partialMatch_2 = partialMatch_2;
-
-                } else { //поиск полностью не свопадающих объектов
-      
-                  completelyNonMatch_2 = lodash.xor(partialMatch_2, nonMatched_2) 
-                  this.completelyNonMatch_2 = completelyNonMatch_2
-                  
-                 
-                }
-                
-              }
-
-            })
+          if (count == 1 && particalMatched_1) {
+            allNonFirst = false;
+            particalMatchedForRow.push([dataFirstTable, dataSecondTable]);
           }
-          
-        }) 
-        this.isLoaded = true
-       
+          count = 0;
+
+        });
+
+        this.partialMatch_1 = [
+          ...particalMatchedForRow,
+          ...this.partialMatch_1,
+        ];
+        if (allNonFirst) {
+          this.nonMatched_1.push(dataFirstTable);
+        }
+      });
+
+      console.log("Полностью1", this.allMatched_1);
+      console.log("Полностью не совпали1", this.nonMatched_1);
+      
+      //Удаление дубликатов из массива
+      const uniq = new Set(
+        this.partialMatch_1.map((e) => JSON.stringify(e))
+      );
+      const res = Array.from(uniq).map((e) => JSON.parse(e));
+      this.partialMatch_1 = res;
+      console.log('Часть1', this.partialMatch_1);
+      //данные которых нет в первой таблице
+
+      this.secondTable.forEach((dataSecondTable) => {
+
+        let allNonFirst = true;
+
+        this.firstTable.forEach((dataFirstTable) => {
+
+          let allMatched_2 = true;
+          let particalMatched_2 = true;
+          let count = 0;
+
+          secondHeaders.forEach((SecondHeaders, index) => {
+            const firstHeadersTable = fisrtHeaders[index];
+
+            let celValue_1 = dataFirstTable[firstHeadersTable] + " ";
+            let celValue_2 = dataSecondTable[SecondHeaders] + " ";
+
+            if (celValue_1.trim() != celValue_2.trim()) {
+              allMatched_2 = false;
+              count++;
+            }
+
+          });
+
+          if (allMatched_2) {
+            allNonFirst = false;
+            this.allMatched_2.push([dataFirstTable, dataSecondTable]);
+            particalMatched_2 = false;
+          }
+
+          if (count == 1 && particalMatched_2) {
+            allNonFirst = false;
+            this.partialMatch_2.push([dataFirstTable, dataSecondTable]);
+          }
+          count = 0;
+        });
+
+        if (allNonFirst) {
+          this.nonMatched_2.push(dataSecondTable);
+        }
+      });
+
+      console.log("Полностью2", this.allMatched_2);
+      console.log("Полностью не совпали2", this.nonMatched_2);
+
+      const res1 = Array.from(uniq).map((e) => JSON.parse(e));
+      this.partialMatch_2 = res1;
+      console.log('Часть2', this.partialMatch_2);
+
+        this.resultOutput()
      },
 
      resultOutput() { //функция вывода полученных данных сравнения на страницу
 
       //для полностью несовпадающих строк
-      this.completelyNonMatch_1.forEach(el => {
+      this.nonMatched_1.forEach(el => {
         this.firstTable.forEach((el2, index) => {
           if(lodash.isEqual(el, el2)) {
             el['index'] = index + 2 //номер строки в excel файле 1
@@ -302,7 +295,7 @@ export default {
         })
       })
 
-      this.completelyNonMatch_2.forEach(el => {
+      this.nonMatched_2.forEach(el => {
         this.secondTable.forEach((el2, index) => {
           if(lodash.isEqual(el, el2)) {
             el['index'] = index + 2 //номер строки в excel файле 2
@@ -312,46 +305,30 @@ export default {
       
 
     //для частично совпадающих строк
-      let partlyOutput = [];
+      //let partlyOutput = [];
       this.partialMatch_1.forEach(el => {
-
+        console.log(el)
         this.firstTable.forEach((e, index) => {
-          if(lodash.isEqual(e, el)) {
-            el['index'] = index + 2 //номер строки в excel файле 1
+          if(lodash.isEqual(e, el[0])) {
+            el[0]['index'] = index + 2 //номер строки в excel файле 1
           }
         })
-
-        for (let item in el) {
-
-        this.partialMatch_2.forEach(el2 => {
-
-         this.secondTable.forEach((e2, index2) => {
-          if(lodash.isEqual(e2, el2)) {
-            el2['index'] = index2 + 2 //номер строки в excel файле 2
+        this.secondTable.forEach((e, index) => {
+          if(lodash.isEqual(e, el[1])) {
+            el[1]['index'] = index + 2 //номер строки в excel файле 1
           }
         })
+        
 
-          for (let item2 in el2) {
 
-            if(lodash.isEqual(el[item], el2[item2])) {
-              partlyOutput.push({el1: el, el2: el2})
-              const uniq = new Set(partlyOutput.map(e => JSON.stringify(e)));
-
-              const res = Array.from(uniq).map(e => JSON.parse(e)); 
-              this.partlyOutput = res
-            }
-            
-          }
-
-        })
-      }
-      })
+          
+    
      
      
      },
 
-  
-     
+      )}
+    
   }
 }
 </script>
