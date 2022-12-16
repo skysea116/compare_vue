@@ -1,26 +1,6 @@
 <template>
   <div class="container">
 
-    <span v-for="item in headers" :key="item">
-      <span v-if="fileNum === '1'"> 
-
-        <div class="warning" v-if="item[item.length - 1] === ' '">
-
-          <p>Столбец "{{ item }} " имеет лишний пробел! <br><br><span>Удалите его для корректной работы!</span> </p>
-
-        </div>
-
-      </span>
-      <span v-else> 
-
-        <div class="warning" v-if="item[item.length - 1] === ' '">
-
-          <p>Столбец "{{ item }} " имеет лишний пробел! <br><br><span>Удалите его для корректной работы!</span> </p>
-
-        </div>
-
-      </span>
-    </span>
     <div>
       
       <div v-if="fileNum === '1'" class="upload">
@@ -52,17 +32,10 @@ import { read, utils } from 'xlsx';
         SheetJSFT: ["xlsx", "xlsb", "xlsm", "xls"].map(function(x) { return "." + x; }).join(","), //разрешённые форматы файлов к загрузке
         isShow_1: false,
         isShow_2: false,
-        warnColumn_1: '',
-        warnColumn_2: '',
         headers: '',
       }
     },
-    computed: {
-      warningCondition: function() {
-        console.log('aaaa')
-        return 'aaa'
-      }
-    },
+
     methods: {
 
       
