@@ -13,8 +13,17 @@ export default {
   components: {
     resultOfCompare,
   },
+  mounted() {
+    this.toUpdate()
+  },
 
-  
+  methods: {
+    toUpdate() {
+      if(this.$store.getters.FIRST_TABLE == '') {
+        this.$router.push('/')
+      } 
+    } 
+  }
 }
 </script>
 

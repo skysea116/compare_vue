@@ -39,6 +39,7 @@ export default {
   
   mounted() {
     this.toWarn()
+    this.toUpdate()
   },
   methods: {
     toWarn() {
@@ -47,6 +48,11 @@ export default {
       } else {
         this.isWarn = false
       }
+    },
+    toUpdate() {
+      if(this.$store.getters.FIRST_TABLE == '') {
+        this.$router.push('/')
+      } 
     }
   }
 
