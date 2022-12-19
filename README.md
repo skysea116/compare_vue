@@ -1,1 +1,1 @@
-Готовый проект https://skysea116.github.io/compare_vue/
+Готовый проект https://compare-7gpggqlcu-alexkrylov2003-yandexru.vercel.app/
