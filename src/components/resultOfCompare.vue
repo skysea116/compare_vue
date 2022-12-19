@@ -138,33 +138,30 @@ export default {
       console.log( this.firstTable, this.secondTable)
      //извлечение данных нужных параметров первой таблицы
 
-        // let itter = Object.keys(this.firstTable[0]).map(function(item) { 
-        //   return item.trim()
-        // });
-        // let del = itter.filter(x => !this.selected_1.includes(x));
-        // del.join()
-        //  this.firstTable.map(function(item) { 
-        //   if(item[del] === undefined) {
-        //     delete item[del + ' ']; 
-        //   } else {
-        //     delete item[del]; 
-        //   }
-        // });
-
+        let itter = Object.keys(this.firstTable[0]).map(function(item) { 
+          return item.trim()
+        });
+        let del = itter.filter(x => !this.selected_1.includes(x));
+        console.log('del',del)
+        del.join()
+         this.firstTable.map(function(item) { 
+          del.forEach(delItem => {
+            delete item[delItem]; 
+          })
+        });
+        console.log('table1', this.firstTable)
         //извлечение данных нужных параметров второй таблицы
 
-        // let itter2 = Object.keys(this.secondTable[0]).map(function(item) { 
-        //   return item.trim()
-        // });
-        // let del2 = itter2.filter(x => !this.selected_1.includes(x));
-        // del2.join()
-        //  this.secondTable.map(function(item) { 
-        //   if(item[del2] === undefined) {
-        //     delete item[del2 + ' ']; 
-        //   } else {
-        //     delete item[del2]; 
-        //   }
-        // });
+        let itter2 = Object.keys(this.secondTable[0]).map(function(item) { 
+          return item.trim()
+        });
+        let del2 = itter2.filter(x => !this.selected_1.includes(x));
+        del2.join()
+         this.secondTable.map(function(item) { 
+          del2.forEach(delItem => {
+            delete item[delItem]; 
+          })
+        });
      }, 
 
      toCompareIt() { //сравнение данных из таблиц

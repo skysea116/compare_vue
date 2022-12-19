@@ -11,7 +11,9 @@
                @change="getSelectValue()" 
                v-if="selected_1[index] !== 'index'"
              >
-             
+              <option value="">
+                   <p></p>
+               </option>
                <option v-for="table2 in headers" :key="table2" :value="table2">
                    <p>{{ table2 }}</p>
                </option>
@@ -30,7 +32,9 @@
                @change="getSelectValue()" 
                v-if="selected_2[index] !== 'index'"
              >
-             
+                <option value="">
+                   <p></p>
+               </option>
                <option v-for="table2 in headers" :key="table2" :value="table2">
                    <p>{{ table2 }}</p>
                </option>
@@ -77,13 +81,27 @@ methods: {
          this.headers.push(item)
          this.selected_2.push(item)
      }
+     
    }
    this.headers;
  },
  getSelectValue() { //передача выбранных параметров во vuex
    if(this.fileNum === '1') {
+    this.selected_1.forEach(item => {
+      if(item === "") {
+        let index = this.selected_1.indexOf(item);
+        this.selected_1.splice(index, 1)
+        
+      }
+     })
      this.$store.commit('SET_1_SELECTED_PARAMS', this.selected_1)
    } else {
+    this.selected_2.forEach(item => {
+      if(item === "") {
+        let index = this.selected_2.indexOf(item);
+        this.selected_2.splice(index, 1)
+      }
+     })
      this.$store.commit('SET_2_SELECTED_PARAMS', this.selected_2)
    }
  }
