@@ -119,6 +119,8 @@ select {
  border: none;
  margin: 5px 0;
  transition: all 0.2s;
+ display: flex;
+ justify-content: center;
 }
 select::-webkit-scrollbar {
  width: 0;
@@ -144,7 +146,11 @@ li {
 .compare h3 {
  display: block;
  height: 7vh !important;
-
+ width: 25vw !important;
+   
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   overflow: hidden;
  text-align: center;
  
 }

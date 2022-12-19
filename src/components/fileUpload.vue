@@ -109,7 +109,13 @@ import { read, utils } from 'xlsx';
     font-size: 25px;
     transition: all 0.2s;
     border-radius: 30px;
-    display: block;
+    
+    width: 500px;
+   
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+   
   }
   label:hover {
     transition: all 0.2s;

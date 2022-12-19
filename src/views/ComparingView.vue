@@ -78,7 +78,6 @@ export default {
   .comp h3 {
     margin-top: 70px;
     font-size: 29px;
-    overflow: auto;
     width: auto;
     height: auto
   }
